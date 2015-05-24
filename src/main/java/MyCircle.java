@@ -17,6 +17,13 @@ public class MyCircle extends Circle {
     public int mass;
     public int radius;
 
+    volatile static Integer counter = 0;
+    final public int id;
+    {
+        synchronized (counter){
+            this.id = counter++;
+        }
+    }
     public MyCircle(double x, double y, int mass, double radius){
         this.setCenterX(x);
         this.setCenterY(y);
