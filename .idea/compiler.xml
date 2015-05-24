@@ -25,5 +25,8 @@
         <module name="Projekt-PO" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Projekt-PO" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

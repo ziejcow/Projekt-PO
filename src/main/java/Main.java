@@ -10,11 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;import javafx.scene.control.Label;import javafx.scene.control.ScrollBar;import javafx.scene.control.TextField;import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
 import javafx.scene.Group;
 import java.lang.*;import java.lang.Integer;import java.lang.Override;import java.lang.String;import java.lang.System;import java.lang.Thread;import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
@@ -23,7 +25,8 @@ public class Main extends Application {
     private final static int circleRadius = 20;
     private static int windowHeight = 1024;
     private static int windowsWidth = 1280;
-    //JavaFX applicatoin still use the main method.
+    AtomicBoolean newCircleWindow = new AtomicBoolean();
+    //JavaFX application still use the main method.
     //It should only ever contain the call to the launch method
     public static void main(String[] args) {
         launch(args);
@@ -48,6 +51,10 @@ public class Main extends Application {
         myManager.figures = new Vector<>();
         Canvas canvas = new Canvas(windowsWidth, windowHeight);
         myManager.movingObjects.getChildren().add(canvas);
+
+        /*
+        * Moving plane handlers
+        * */
         myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -60,8 +67,6 @@ public class Main extends Application {
         myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double width = scene.getWidth();
-                double height = scene.getHeight();
                 if(event.getButton().toString().equals("SECONDARY")){
                     int x = (int)event.getSceneX();
                     int y = (int) event.getSceneY();
@@ -70,9 +75,7 @@ public class Main extends Application {
                         t.stop();
                     }
                     for (MyCircle i : myManager.figures) {
-                       //System.out.println( (x-mouseStartX.get()) + " " + (y-mouseStartY.get()) );
                        i.translate((x-mouseStartX.get()), (y-mouseStartY.get()));
-                       // i.translate( (event.getSceneX() - width/2) / 100, (event.getSceneY() - height/2) / 100);
                     }
                     mouseStartX.set(x);
                     mouseStartY.set(y);
@@ -80,51 +83,85 @@ public class Main extends Application {
                 }
             }
         });
+
+        /*
+        * Adding/modifying circle handler
+        * */
         myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(event.getButton().toString().equals("PRIMARY")){
-                    MyCircle temp = new MyCircle();
-                    temp.setCenterX(event.getSceneX());
-                    temp.setCenterY(event.getSceneY());
-                    temp.setRadius(circleRadius);
-                    System.out.println("dziala");
-                    myManager.movingObjects.getChildren().add(temp);
-
-                    final Stage dialog = new Stage();
-
-                    dialog.initOwner(primaryStage);
-                    VBox dialogVbox = new VBox(20);
-                    dialogVbox.getChildren().add(new Text("Set movement vector"));
-                    Scene dialogScene = new Scene(dialogVbox, 300, 200);
-
-                    MyButton next = new MyButton("X");
-                    next.newCircle = temp;
-                    TextField scanVector = new TextField("10");
-                    next.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            if(next.getText().equals("X")) {
-                                next.setText("Y");
-                                next.newCircle.vecX = java.lang.Integer.parseInt(scanVector.getText());
-                                scanVector.setText("10");
-                            }
-                            else if(next.getText().equals("Y")) {
-                                next.setText("MASS");
-
-                                next.newCircle.vecY = Integer.parseInt(scanVector.getText());
-                            }
-                            else if(next.getText().equals("MASS")){
-                                next.newCircle.mass = Integer.parseInt(scanVector.getText());
-                                dialog.hide();
-                            }
+                /*
+                * Check which mouse button was used for click, PRIMARY is left
+                * */
+                if(event.getButton().toString().equals("PRIMARY") && newCircleWindow.compareAndSet(false, true)){
+//                    newCircleWindow.set(true);
+                    // System.out.println();
+                    /*
+                    * Check if clicked on existing wheel
+                    * */
+                    boolean collision = false;
+                    for(MyCircle i : myManager.figures){
+                        if(i.inCircle(event.getSceneX(), event.getSceneY())){
+                            System.out.println("Collision");
+                            collision = true;
                         }
-                    });
-                    myManager.figures.add(temp);
-                    dialogVbox.getChildren().add(scanVector);
-                    dialogVbox.getChildren().add(next);
-                    dialog.setScene(dialogScene);
-                    dialog.show();
+                    }
+                    if(!collision) {
+                        /*
+                        * Init new Dialong window with gridPane and add all labels, buttons and textFields
+                        * */
+                        final Stage settingsDialog = new Stage();
+                        settingsDialog.initOwner(primaryStage);
+                        settingsDialog.setTitle("Adding new circle");
+                        GridPane gridPane = new GridPane();
+                        Scene dialogScene = new Scene(gridPane, 250, 120);
+
+                        Label xLabel = new Label(" X: ");
+                        TextField xTextField = new TextField("10");
+                        gridPane.add(xLabel, 0, 0);
+                        gridPane.add(xTextField, 1, 0);
+
+                        Label yLabel = new Label(" Y: ");
+                        TextField yTextField = new TextField("10");
+                        gridPane.add(yLabel, 0, 1);
+                        gridPane.add(yTextField, 1, 1);
+
+                        Label massLabel = new Label(" Mass: ");
+                        TextField massTextField = new TextField("10");
+                        gridPane.add(massLabel, 0, 2);
+                        gridPane.add(massTextField, 1, 2);
+
+                        Button addCircleButton = new Button("ADD");
+                        gridPane.add(addCircleButton, 1, 3);
+
+
+                        /*
+                        * Create new Circle with proper x, y position
+                        * */
+                        MyCircle circle = new MyCircle(event.getSceneX(), event.getSceneY(), 0, circleRadius);
+
+
+                        /*
+                        * Set action for clicking ADD button
+                        * */
+
+                        addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {
+                                circle.vecX = Integer.parseInt(xTextField.getText());
+                                circle.vecY = Integer.parseInt(yTextField.getText());
+                                circle.mass = Integer.parseInt(massTextField.getText());
+                                myManager.movingObjects.getChildren().add(circle);
+                                myManager.figures.add(circle);
+                                System.out.println("Circle added");
+                                settingsDialog.hide();
+                                newCircleWindow.set(false);
+                            }
+                        });
+
+                        settingsDialog.setScene(dialogScene);
+                        settingsDialog.show();
+                    }
                 }
             }
         });
@@ -190,18 +227,6 @@ public class Main extends Application {
         grid.getChildren().add(myManager.movingObjects);
         myManager.movingObjects.toBack();
 
-        /*scene.widthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                System.out.println("W: " + scene.getWidth() + ", H: " + scene.getHeight());
-            }
-        });
-        scene.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                System.out.println("W: " + scene.getWidth() + ", H: " + scene.getHeight());
-            }
-        });*/
         primaryStage.setScene(scene);
         primaryStage.show();
     }
