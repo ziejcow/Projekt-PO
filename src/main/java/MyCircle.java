@@ -1,5 +1,6 @@
 
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.shape.Circle;
 
 /**
@@ -11,17 +12,19 @@ public class MyCircle extends Circle {
     /*
     * Contains speed in each axis in "unit" per second
     * */
-    public int vecX;
-    public int vecY;
+    public Integer vecX;
+    public Integer vecY;
 
     public int mass;
     public int radius;
 
     volatile static Integer counter = 0;
-    final public int id;
+    public Integer id;
+    public SimpleStringProperty idString;
     {
         synchronized (counter){
             this.id = counter++;
+            idString = new SimpleStringProperty(id.toString());
         }
     }
     public MyCircle(double x, double y, int mass, double radius){

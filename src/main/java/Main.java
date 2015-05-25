@@ -6,12 +6,16 @@
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;import javafx.scene.control.Label;import javafx.scene.control.ScrollBar;import javafx.scene.control.TextField;import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Button;import javafx.scene.control.Label;import javafx.scene.control.ScrollBar;import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -85,18 +89,27 @@ public class Main extends Application {
         ballsTable.setPrefSize(200, primaryStage.getHeight()-toolPane.getHeight());
         root.getChildren().addAll(ballsTable);
 
+
+        ObservableList<MyCircle> tableData = FXCollections.observableArrayList();
+        ballsTable.setItems(tableData);
+
         TableColumn id = new TableColumn("ID");
         id.setPrefWidth(100);
+        id.setCellValueFactory(new PropertyValueFactory<MyCircle, String>("idString"));
+
         TableColumn vector = new TableColumn("Vector");
         vector.setPrefWidth(100);
+
         TableColumn vecX = new TableColumn("X");
+        //vecX.setCellValueFactory(new PropertyValueFactory<MyCircle, String>("vecX"));
         vecX.setPrefWidth(50);
+
         TableColumn vecY = new TableColumn("Y");
         vecY.setPrefWidth(50);
+
         vector.getColumns().addAll(vecX, vecY);
         ballsTable.getColumns().addAll(id, vector);
-
-
+        ballsTable.getColumns().add(id);
         Canvas canvas = new Canvas(windowsWidth, windowHeight);
         myManager.movingObjects.getChildren().add(canvas);
 
@@ -210,7 +223,9 @@ public class Main extends Application {
                                 circle.mass = Integer.parseInt(massTextField.getText());
                                 myManager.movingObjects.getChildren().add(circle);
                                 myManager.figures.add(circle);
-                                System.out.println("Circle added");
+                                tableData.add(circle);
+                                System.out.println("Circle with ID: " + circle.id + " added.");
+                                //System.out.println(tableData.size());
                                 settingsDialog.hide();
                                 newCircleWindow.set(false);
                             }
