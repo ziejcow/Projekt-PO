@@ -13,7 +13,8 @@ import java.util.Vector;
  * Created by osm on 03/05/15.
  */
 public class ExperimentManager {
-    public ScrollBar scroll;
+    //public ScrollBar scroll;
+    public Double scrollValue = 0.0;
     public Group movingObjects;
     public Group staticObjects;
     public Vector<MyCircle> figures;
@@ -89,7 +90,8 @@ public class ExperimentManager {
                     //System.out.println(figures.size());
                     for (MyCircle cir : figures) {
                         double sec = 0.1;
-                        sec *= scroll.getValue();
+                        //sec *= scroll.getValue();
+                        sec *= scrollValue;
                         sec /= 100;
                         cir.move(sec);
                     }
@@ -106,9 +108,5 @@ public class ExperimentManager {
 
     void restart() {
         going = false;
-    }
-
-    void setScroll(ScrollBar a) {
-        scroll = a;
     }
 }
