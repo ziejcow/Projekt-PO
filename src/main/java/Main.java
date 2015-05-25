@@ -4,6 +4,8 @@
 //Imports are listed in full to show what's being used
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -75,13 +77,25 @@ public class Main extends Application {
         timeScroll.setPrefSize(200, 20);
         timeScroll.setTranslateY(20);
         timeScroll.setTranslateX(200);
-        myManager.setScroll(timeScroll);
         toolPane.getChildren().addAll(timeScroll);
 
         TableView ballsTable = new TableView();
+        ballsTable.setEditable(true);
         ballsTable.setTranslateY(40);
         ballsTable.setPrefSize(200, primaryStage.getHeight()-toolPane.getHeight());
         root.getChildren().addAll(ballsTable);
+
+        TableColumn id = new TableColumn("ID");
+        id.setPrefWidth(100);
+        TableColumn vector = new TableColumn("Vector");
+        vector.setPrefWidth(100);
+        TableColumn vecX = new TableColumn("X");
+        vecX.setPrefWidth(50);
+        TableColumn vecY = new TableColumn("Y");
+        vecY.setPrefWidth(50);
+        vector.getColumns().addAll(vecX, vecY);
+        ballsTable.getColumns().addAll(id, vector);
+
 
         Canvas canvas = new Canvas(windowsWidth, windowHeight);
         myManager.movingObjects.getChildren().add(canvas);
@@ -201,14 +215,12 @@ public class Main extends Application {
                                 newCircleWindow.set(false);
                             }
                         });
-
                         settingsDialog.setScene(dialogScene);
                         settingsDialog.show();
                     }
                 }
             }
         });
-
 
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -234,6 +246,13 @@ public class Main extends Application {
             }
         });
 
-
+        timeScroll.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                synchronized (myManager.scrollValue){
+                    myManager.scrollValue = timeScroll.getValue();
+                }
+            }
+        });
     }
 }
