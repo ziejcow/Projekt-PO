@@ -23,6 +23,8 @@ public class ExperimentManager {
     double howFast;
 
     {
+        figures = new Vector<>();
+        myThreads = new Vector<>();
         movingObjects = new Group();
         going = false;
     }

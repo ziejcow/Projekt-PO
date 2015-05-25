@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;import javafx.scene.control.Label;import javafx.scene.control.ScrollBar;import javafx.scene.control.TextField;import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -20,12 +21,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main extends Application {
-
-
     private final static int circleRadius = 20;
     private static int windowHeight = 1024;
     private static int windowsWidth = 1280;
     AtomicBoolean newCircleWindow = new AtomicBoolean();
+    AtomicInteger mouseStartX = new AtomicInteger();
+    AtomicInteger mouseStartY = new AtomicInteger();
+
     //JavaFX application still use the main method.
     //It should only ever contain the call to the launch method
     public static void main(String[] args) {
@@ -37,20 +39,60 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         ExperimentManager myManager = new ExperimentManager();
-        Group grid = new Group();
-        Scene scene = new Scene(grid, 200, 300);
-        myManager.myThreads = new Vector<>();
-        VBox buttons = new VBox();
-        Button start = new Button("Start");
-        AtomicInteger mouseStartX = new AtomicInteger();
-        AtomicInteger mouseStartY = new AtomicInteger();
-        Button restart = new Button("Restart");
-        Button addFigure = new Button("Add Figure");
-        Button addBall = new Button("Add Ball");
-        addBall.setVisible(false);
-        myManager.figures = new Vector<>();
+        Group root = new Group();
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+        primaryStage.setMinHeight(480);
+        primaryStage.setMinWidth(640);
+        primaryStage.setTitle("Physics Engine");
+        primaryStage.setMaxHeight(1440);
+        primaryStage.setMaxWidth(2560);
+        primaryStage.setWidth(1024);
+        primaryStage.setHeight(768);
+
+        AnchorPane toolPane = new AnchorPane();
+        toolPane.setPrefSize(1024, 40);
+        root.getChildren().addAll(toolPane);
+
+        Button startButton = new Button("Start");
+        startButton.setPrefSize(100, 40);
+        toolPane.getChildren().addAll(startButton);
+
+        Button restartButton = new Button("Restart");
+        restartButton.setPrefSize(100, 40);
+        restartButton.setTranslateX(100);
+        toolPane.getChildren().addAll(restartButton);
+
+        Label timeScrollLabel = new Label("Time: ");
+        timeScrollLabel.setPrefSize(100, 20);
+        timeScrollLabel.setTranslateX(200);
+        toolPane.getChildren().addAll(timeScrollLabel);
+
+        ScrollBar timeScroll = new ScrollBar();
+        timeScroll.setMax(100);
+        timeScroll.setMin(-100);
+        timeScroll.setValue(0);
+        timeScroll.setPrefSize(200, 20);
+        timeScroll.setTranslateY(20);
+        timeScroll.setTranslateX(200);
+        myManager.setScroll(timeScroll);
+        toolPane.getChildren().addAll(timeScroll);
+
+        TableView ballsTable = new TableView();
+        ballsTable.setTranslateY(40);
+        ballsTable.setPrefSize(200, primaryStage.getHeight()-toolPane.getHeight());
+        root.getChildren().addAll(ballsTable);
+
         Canvas canvas = new Canvas(windowsWidth, windowHeight);
         myManager.movingObjects.getChildren().add(canvas);
+
+
+        root.getChildren().add(myManager.movingObjects);
+        myManager.movingObjects.toBack();
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
 
         /*
         * Moving plane handlers
@@ -58,7 +100,7 @@ public class Main extends Application {
         myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(event.getButton().toString().equals("SECONDARY")){
+                if (event.getButton().toString().equals("SECONDARY")) {
                     mouseStartX.set(((int) event.getSceneX()));
                     mouseStartY.set(((int) event.getSceneY()));
                 }
@@ -67,15 +109,15 @@ public class Main extends Application {
         myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_DRAGGED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(event.getButton().toString().equals("SECONDARY")){
-                    int x = (int)event.getSceneX();
+                if (event.getButton().toString().equals("SECONDARY")) {
+                    int x = (int) event.getSceneX();
                     int y = (int) event.getSceneY();
                     myManager.stop();
                     for (Thread t : myManager.myThreads) {
                         t.stop();
                     }
                     for (MyCircle i : myManager.figures) {
-                       i.translate((x-mouseStartX.get()), (y-mouseStartY.get()));
+                        i.translate((x - mouseStartX.get()), (y - mouseStartY.get()));
                     }
                     mouseStartX.set(x);
                     mouseStartY.set(y);
@@ -93,23 +135,24 @@ public class Main extends Application {
                 /*
                 * Check which mouse button was used for click, PRIMARY is left
                 * */
-                if(event.getButton().toString().equals("PRIMARY") && newCircleWindow.compareAndSet(false, true)){
-//                    newCircleWindow.set(true);
-                    // System.out.println();
+                if (event.getButton().toString().equals("PRIMARY") &&
+                        !newCircleWindow.get()) {
+
                     /*
                     * Check if clicked on existing wheel
                     * */
                     boolean collision = false;
-                    for(MyCircle i : myManager.figures){
-                        if(i.inCircle(event.getSceneX(), event.getSceneY())){
+                    for (MyCircle i : myManager.figures) {
+                        if (i.inCollisionProximity(event.getSceneX(), event.getSceneY())) {
                             System.out.println("Collision");
                             collision = true;
                         }
                     }
-                    if(!collision) {
+                    if (!collision) {
                         /*
                         * Init new Dialong window with gridPane and add all labels, buttons and textFields
                         * */
+                        newCircleWindow.set(true);
                         final Stage settingsDialog = new Stage();
                         settingsDialog.initOwner(primaryStage);
                         settingsDialog.setTitle("Adding new circle");
@@ -166,68 +209,31 @@ public class Main extends Application {
             }
         });
 
-        ScrollBar scroll = new ScrollBar();
-        scroll.setMax(100);
-        scroll.setMin(-100);
-        scroll.setValue(0);
-        start.setMinWidth(200);
-        restart.setMinWidth(200);
 
-        addBall.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
-        addFigure.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                addBall.setVisible(true);
-            }
-        });
-
-        start.setOnAction(new EventHandler<ActionEvent>() {
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if (!myManager.isGoing()) {
-
                     myManager.myRun();
-                    //myManager.myRun();
-                    start.setText("Stop");
+                    startButton.setText("Stop");
                 } else {
                     myManager.stop();
                     for (Thread t : myManager.myThreads) {
                         t.stop();
                     }
-                    start.setText("Continue");
+                    startButton.setText("Continue");
                 }
             }
         });
-        restart.setOnAction(new EventHandler<ActionEvent>() {
+        restartButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 myManager.restart();
-                start.setText("Start");
+                startButton.setText("Start");
                 myManager.movingObjects.getChildren().clear();
-                //myManager.movingObjects.getChildren() = new FXCollections.observableList<Circle>();
             }
         });
 
 
-        myManager.setScroll(scroll);
-        buttons.getChildren().add(start);
-        buttons.getChildren().add(restart);
-        Label startLabel = new Label("Start");
-        startLabel.setMinWidth(200);
-        buttons.getChildren().add(startLabel);
-        buttons.getChildren().add(scroll);
-
-
-        grid.getChildren().add(buttons);
-        grid.getChildren().add(myManager.movingObjects);
-        myManager.movingObjects.toBack();
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }
