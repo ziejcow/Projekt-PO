@@ -135,10 +135,28 @@ public class Main extends Application {
                     /*
                     * Check if clicked on existing wheel
                     * */
+
+                    for (MyCircle i : myManager.figures) {
+                        if (i.inCircle(event.getSceneX(), event.getSceneY())) {
+                            System.out.println("Clicked on circle");
+                            ModifyCircleDialog modifyCircleDialog = new ModifyCircleDialog(primaryStage, i);
+                            modifyCircleDialog.saveChanges.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    i.vecX = modifyCircleDialog.getXValue();
+                                    i.vecY = modifyCircleDialog.getYValue();
+                                    i.mass = modifyCircleDialog.getMassValue();
+                                    modifyCircleDialog.hide();
+                                }
+                            });
+                            modifyCircleDialog.show();
+                            return;
+                        }
+                    }
                     boolean collision = false;
                     for (MyCircle i : myManager.figures) {
                         if (i.inCollisionProximity(event.getSceneX(), event.getSceneY())) {
-                            System.out.println("Collision");
+                            System.out.println("Too close to create new circle");
                             collision = true;
                         }
                     }

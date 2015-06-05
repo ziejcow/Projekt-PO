@@ -15,7 +15,7 @@ public class MyCircle extends Circle {
     public Integer vecX;
     public Integer vecY;
 
-    public int mass;
+    public Integer mass;
     public int radius;
 
     volatile static Integer counter = 0;
