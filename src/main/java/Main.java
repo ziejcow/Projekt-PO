@@ -223,7 +223,7 @@ public class Main extends Application {
         toolPane.timeScroll.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                synchronized (myManager.scrollValue){
+                synchronized (myManager.scrollValue) {
                     myManager.scrollValue = toolPane.timeScroll.getValue();
                 }
             }
