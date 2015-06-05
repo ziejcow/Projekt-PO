@@ -8,17 +8,12 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;import javafx.scene.control.Label;import javafx.scene.control.ScrollBar;import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.layout.VBox;
 import javafx.scene.Group;
-import java.lang.*;import java.lang.Integer;import java.lang.Override;import java.lang.String;import java.lang.System;import java.lang.Thread;import java.util.Vector;
+import java.lang.*;
+import java.lang.Override;import java.lang.String;import java.lang.System;import java.lang.Thread;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -152,58 +147,32 @@ public class Main extends Application {
                         * Init new Dialong window with gridPane and add all labels, buttons and textFields
                         * */
                         newCircleWindow.set(true);
-                        final Stage settingsDialog = new Stage();
-                        settingsDialog.initOwner(primaryStage);
-                        settingsDialog.setTitle("Adding new circle");
-                        GridPane gridPane = new GridPane();
-                        Scene dialogScene = new Scene(gridPane, 250, 120);
-
-                        Label xLabel = new Label(" X: ");
-                        TextField xTextField = new TextField("10");
-                        gridPane.add(xLabel, 0, 0);
-                        gridPane.add(xTextField, 1, 0);
-
-                        Label yLabel = new Label(" Y: ");
-                        TextField yTextField = new TextField("10");
-                        gridPane.add(yLabel, 0, 1);
-                        gridPane.add(yTextField, 1, 1);
-
-                        Label massLabel = new Label(" Mass: ");
-                        TextField massTextField = new TextField("10");
-                        gridPane.add(massLabel, 0, 2);
-                        gridPane.add(massTextField, 1, 2);
-
-                        Button addCircleButton = new Button("ADD");
-                        gridPane.add(addCircleButton, 1, 3);
-
+                        NewCircleDialog newCircleDialog = new NewCircleDialog(primaryStage);
 
                         /*
                         * Create new Circle with proper x, y position
                         * */
                         MyCircle circle = new MyCircle(event.getSceneX(), event.getSceneY(), 0, circleRadius);
 
-
                         /*
                         * Set action for clicking ADD button
                         * */
-
-                        addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
+                        newCircleDialog.addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                circle.vecX = Integer.parseInt(xTextField.getText());
-                                circle.vecY = Integer.parseInt(yTextField.getText());
-                                circle.mass = Integer.parseInt(massTextField.getText());
+                                circle.vecX = newCircleDialog.getXValue();
+                                circle.vecY = newCircleDialog.getYValue();
+                                circle.mass = newCircleDialog.getMassValue();
                                 myManager.movingObjects.getChildren().add(circle);
                                 myManager.figures.add(circle);
                                 //tableData.add(circle);
                                 System.out.println("Circle with ID: " + circle.id + " added.");
                                 //System.out.println(tableData.size());
-                                settingsDialog.hide();
+                                newCircleDialog.hide();
                                 newCircleWindow.set(false);
                             }
                         });
-                        settingsDialog.setScene(dialogScene);
-                        settingsDialog.show();
+                        newCircleDialog.show();
                     }
                 }
             }
