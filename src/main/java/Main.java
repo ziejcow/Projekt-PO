@@ -1,8 +1,3 @@
-
-
-
-//Imports are listed in full to show what's being used
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
@@ -56,32 +52,8 @@ public class Main extends Application {
         primaryStage.setWidth(1024);
         primaryStage.setHeight(768);
 
-        AnchorPane toolPane = new AnchorPane();
-        toolPane.setPrefSize(1024, 40);
+        ToolPane toolPane = new ToolPane(1024, 40);
         root.getChildren().addAll(toolPane);
-
-        Button startButton = new Button("Start");
-        startButton.setPrefSize(100, 40);
-        toolPane.getChildren().addAll(startButton);
-
-        Button restartButton = new Button("Restart");
-        restartButton.setPrefSize(100, 40);
-        restartButton.setTranslateX(100);
-        toolPane.getChildren().addAll(restartButton);
-
-        Label timeScrollLabel = new Label("Time: ");
-        timeScrollLabel.setPrefSize(100, 20);
-        timeScrollLabel.setTranslateX(200);
-        toolPane.getChildren().addAll(timeScrollLabel);
-
-        ScrollBar timeScroll = new ScrollBar();
-        timeScroll.setMax(100);
-        timeScroll.setMin(-100);
-        timeScroll.setValue(0);
-        timeScroll.setPrefSize(200, 20);
-        timeScroll.setTranslateY(20);
-        timeScroll.setTranslateX(200);
-        toolPane.getChildren().addAll(timeScroll);
 
         TableView ballsTable = new TableView();
         ballsTable.setEditable(true);
@@ -223,7 +195,7 @@ public class Main extends Application {
                                 circle.mass = Integer.parseInt(massTextField.getText());
                                 myManager.movingObjects.getChildren().add(circle);
                                 myManager.figures.add(circle);
-                                tableData.add(circle);
+                                //tableData.add(circle);
                                 System.out.println("Circle with ID: " + circle.id + " added.");
                                 //System.out.println(tableData.size());
                                 settingsDialog.hide();
@@ -237,35 +209,35 @@ public class Main extends Application {
             }
         });
 
-        startButton.setOnAction(new EventHandler<ActionEvent>() {
+        toolPane.startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if (!myManager.isGoing()) {
                     myManager.myRun();
-                    startButton.setText("Stop");
+                    toolPane.startButton.setText("Stop");
                 } else {
                     myManager.stop();
                     for (Thread t : myManager.myThreads) {
                         t.stop();
                     }
-                    startButton.setText("Continue");
+                    toolPane.startButton.setText("Continue");
                 }
             }
         });
-        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+        toolPane.restartButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 myManager.restart();
-                startButton.setText("Start");
+                toolPane.startButton.setText("Start");
                 myManager.movingObjects.getChildren().clear();
             }
         });
 
-        timeScroll.valueProperty().addListener(new ChangeListener<Number>() {
+        toolPane.timeScroll.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 synchronized (myManager.scrollValue){
-                    myManager.scrollValue = timeScroll.getValue();
+                    myManager.scrollValue = toolPane.timeScroll.getValue();
                 }
             }
         });
