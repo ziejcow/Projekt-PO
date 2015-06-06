@@ -29,10 +29,6 @@ public class MainWindow extends Application {
         launch(args);
     }
 
-    public TablePane<MyCircle> getBallsTable() {
-        return ballsTable;
-    }
-
     //starting point for the application
     //this is where we put the code for the user interface
     @Override
