@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.shape.Circle;
 
+import java.util.Stack;
 import java.util.Vector;
 
 /**
@@ -19,6 +20,8 @@ public class ExperimentManager {
 	private Boolean stopEngine = false;
 	private Timeline timeline;
 	private boolean isPlaying;
+
+	public Stack<MyCircle> oprtations;
 
 	public Boolean getStopEngine() {
 		return stopEngine;
@@ -41,6 +44,7 @@ public class ExperimentManager {
 		figures = new Vector<>();
 		//myThreads = new Vector<>();
 		movingObjects = new Group();
+		oprtations = new Stack<>();
 	}
 
 	private double abs(double a) {

@@ -168,6 +168,7 @@ public class MainWindow extends Application {
 								circle.mass = newCircleDialog.getMassValue();
 								myManager.movingObjects.getChildren().add(circle);
 								myManager.figures.add(circle);
+								myManager.oprtations.add(circle);
 								tableData.add(circle);
 								System.out.println("Circle with ID: " + circle.getCircleId() + " added.");
 								//System.out.println(tableData.size());
@@ -227,6 +228,20 @@ public class MainWindow extends Application {
 				myManager.myRun();
 				MyCircle.clearId();
 				tableData.clear();
+			}
+		});
+		toolPane.undoButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				boolean restore = myManager.getIsPlaying();
+				myManager.pause();
+				myManager.figures.remove(myManager.oprtations.peek());
+				myManager.movingObjects.getChildren().remove(myManager.oprtations.peek());
+				tableData.remove(tableData.size()-1);
+				myManager.oprtations.pop();
+				if(restore){
+					myManager.play();
+				}
 			}
 		});
 	}
