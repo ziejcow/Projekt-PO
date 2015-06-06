@@ -19,6 +19,7 @@ public class ExperimentManager {
     public Vector<MyCircle> figures;
     private Boolean stopEngine = false;
     private Timeline timeline;
+    private boolean isPlaying;
     public Boolean getStopEngine() {
         return stopEngine;
     }
@@ -99,11 +100,17 @@ public class ExperimentManager {
         //timeline.play();
 
     }
+
     void play(){
+        isPlaying = true;
         timeline.play();
     }
     void pause() {
+        isPlaying = false;
         timeline.pause();
+    }
+    public boolean getIsPlaying(){
+        return isPlaying;
     }
     void restart() {
     }

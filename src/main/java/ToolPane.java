@@ -9,21 +9,19 @@ import javafx.scene.layout.AnchorPane;
 public class ToolPane extends AnchorPane{
     //private AnchorPane toolPane;
     public final Button startButton;
-    public final Button restartButton;
+    public final Button newSimulationButton;
     public final ScrollBar timeScroll;
     ToolPane(int width, int height){
-//        toolPane = new AnchorPane();
-
         this.setPrefSize(width, height);
 
         startButton = new Button("Start");
         startButton.setPrefSize(100, 40);
         this.getChildren().addAll(startButton);
 
-        restartButton = new Button("Restart");
-        restartButton.setPrefSize(100, 40);
-        restartButton.setTranslateX(100);
-        this.getChildren().addAll(restartButton);
+        newSimulationButton = new Button("New");
+        newSimulationButton.setPrefSize(100, 40);
+        newSimulationButton.setTranslateX(100);
+        this.getChildren().addAll(newSimulationButton);
 
         Label timeScrollLabel = new Label("Time: ");
         timeScrollLabel.setPrefSize(100, 20);
