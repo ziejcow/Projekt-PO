@@ -1,33 +1,37 @@
 
 
-import javafx.scene.control.ScrollBar;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
 import javafx.scene.shape.Circle;
-import javafx.concurrent.Task;
 import javafx.scene.Group;
 
-import java.lang.Exception;
-import java.lang.Override;
-import java.lang.Thread;
-import java.lang.Void;
 import java.util.Vector;
 
 /**
  * Created by osm on 03/05/15.
  */
 public class ExperimentManager {
-    //public ScrollBar scroll;
     private TablePane<MyCircle> tablePane;
     public Double scrollValue = 0.0;
     public Group movingObjects;
-    public Group staticObjects;
     public Vector<MyCircle> figures;
-
-    public Thread getEngine() {
-        return engine;
+    private Boolean stopEngine = false;
+    private Timeline timeline;
+    public Boolean getStopEngine() {
+        return stopEngine;
     }
 
-    private Thread engine;
+    public void setStopEngine(Boolean stopEngine) {
+        this.stopEngine = stopEngine;
+    }
+
+//    public Thread getEngine() {
+//        return engine;
+//    }
+
+    //private Thread engine;
     //public Vector<Thread> myThreads;
     boolean going;
     double eps = 1;
@@ -44,9 +48,6 @@ public class ExperimentManager {
         return going;
     }
 
-    void stop() {
-        going = false;
-    }
 
     private double abs(double a) {
         if (a < 0.0) {
@@ -71,53 +72,62 @@ public class ExperimentManager {
         tablePane = t;
     }
     void myRun() {
-        final Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                while (true) {
-                    try {
-                        Thread.sleep(1000 / 30);
-                    } catch (Exception e) {
+        timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(1000/30), event -> {
+            for (int i = 0; i < figures.size(); i++) {
+                for (int j = i + 1; j < figures.size(); j++) {
 
+                    MyCircle cir1 = figures.get(i);
+                    MyCircle cir2 = figures.get(j);
+                    if (!tangent(cir1, cir2)) {
+                        continue;
                     }
-                    for (int i = 0; i < figures.size(); i++) {
-                        for (int j = i + 1; j < figures.size(); j++) {
+                    if (abs(cir1.vecX - cir2.vecX) < eps && abs(cir1.vecY - cir2.vecY) < eps) {
+                        continue;
+                    }
+                    double cs = ((double) cir1.getCenterX() - (double) cir2.getCenterX())/((double) (cir1.getRadius() + cir2.getRadius())) ;
+                    double ss = ((double) cir1.getCenterY() - (double) cir2.getCenterY())/((double) (cir1.getRadius() + cir2.getRadius())) ;
 
-                            MyCircle cir1 = figures.get(i);
-                            MyCircle cir2 = figures.get(j);
-                            if (!tangent(cir1, cir2)) {
-                                continue;
-                            }
-                            if (abs(cir1.vecX - cir2.vecX) < eps && abs(cir1.vecY - cir2.vecY) < eps) {
-                                continue;
-                            }
-                            int newX = cir1.vecX + cir2.vecX;
-                            int newY = cir1.vecY + cir2.vecY;
-                            cir1.vecX += newX;
-                            cir1.vecY += newY;
-                            cir2.vecX += newX;
-                            cir2.vecY += newY;
-                        }
-                    }
-                    //System.out.println(figures.size());
-                    for (MyCircle cir : figures) {
-                        double sec = 0.1;
-                        //sec *= scroll.getValue();
-                        sec *= scrollValue;
-                        sec /= 100;
-                        cir.move(sec);
-                    }
-                    //tablePane.refresh();
+
+                    double x1 = cir1.vecX * cs - cir1.vecY * ss;
+                    double y1 = cir1.vecX * ss + cir1.vecY * cs;
+
+                    double x2 = cir2.vecX * cs - cir2.vecY * ss;
+                    double y2 = cir2.vecX * ss + cir2.vecY * cs;
+
+                    double temp = (cir1.mass * x1 + cir2.mass * x2)/(2.0 * (cir1.mass + cir2.mass));
+                    x2 = temp;
+                    x1 = temp;
+                    System.out.println(temp);
+
+                    cir1.vecX = x1 * cs - y1 * ss;
+                    cir1.vecX = y1 * ss + y1 * cs;
+
+                    cir2.vecX = x2 * cs - y2 * ss;
+                    cir2.vecY= x2 * ss + y2 * cs;
+                    System.out.println(cir1.vecX + " " + cir1.vecY + " " + cir2.vecX + " " +  cir2.vecY);
                 }
             }
-        };
-        engine = new Thread(task);
-        engine.setDaemon(true);
-        engine.start();
-        going = true;
+            //System.out.println(figures.size());
+            for (MyCircle cir : figures) {
+                double sec = 0.1;
+                //sec *= scroll.getValue();
+                sec *= scrollValue;
+                sec /= 100;
+                cir.move(sec);
+            }
+            tablePane.refresh();
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        //timeline.play();
 
     }
-
+    void play(){
+        timeline.play();
+    }
+    void pause() {
+        timeline.pause();
+        going = false;
+    }
     void restart() {
         going = false;
     }
