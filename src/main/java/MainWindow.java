@@ -116,6 +116,7 @@ public class MainWindow extends Application {
                     for (MyCircle i : myManager.figures) {
                         if (i.inCircle(event.getSceneX(), event.getSceneY())) {
                             System.out.println("Clicked on circle");
+							myManager.pause();
                             ModifyCircleDialog modifyCircleDialog = new ModifyCircleDialog(primaryStage, i);
                             modifyCircleDialog.saveChanges.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
@@ -124,6 +125,7 @@ public class MainWindow extends Application {
                                     i.vecY = modifyCircleDialog.getYValue();
                                     i.mass = modifyCircleDialog.getMassValue();
                                     modifyCircleDialog.hide();
+									myManager.play();
                                 }
                             });
                             modifyCircleDialog.show();
@@ -152,6 +154,7 @@ public class MainWindow extends Application {
                         /*
                         * Set action for clicking ADD button
                         * */
+						myManager.pause();
                         newCircleDialog.addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
@@ -165,6 +168,7 @@ public class MainWindow extends Application {
                                 //System.out.println(tableData.size());
                                 newCircleDialog.hide();
                                 newCircleWindow.set(false);
+								myManager.play();
                             }
                         });
                         newCircleDialog.show();
