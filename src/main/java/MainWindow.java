@@ -8,9 +8,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -73,6 +70,7 @@ public class MainWindow extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        myManager.myRun();
 
         /*
         * Moving plane handlers
@@ -92,14 +90,13 @@ public class MainWindow extends Application {
                 if (event.getButton().toString().equals("SECONDARY")) {
                     int x = (int) event.getSceneX();
                     int y = (int) event.getSceneY();
-                    myManager.stop();
-                    myManager.getEngine().stop();
+                    myManager.pause();
                     for (MyCircle i : myManager.figures) {
                         i.translate((x - mouseStartX.get()), (y - mouseStartY.get()));
                     }
                     mouseStartX.set(x);
                     mouseStartY.set(y);
-                    myManager.myRun();
+                    myManager.play();
                 }
             }
         });
@@ -127,9 +124,9 @@ public class MainWindow extends Application {
                             modifyCircleDialog.saveChanges.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent event) {
-                                    i.vecX = modifyCircleDialog.getXValue();
-                                    i.vecY = modifyCircleDialog.getYValue();
-                                    i.mass = modifyCircleDialog.getMassValue();
+                                    i.setVecX(modifyCircleDialog.getXValue());
+                                    i.setVecY(  modifyCircleDialog.getYValue());
+                                    i.setMass( modifyCircleDialog.getMassValue());
                                     modifyCircleDialog.hide();
                                 }
                             });
@@ -162,9 +159,9 @@ public class MainWindow extends Application {
                         newCircleDialog.addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
                             @Override
                             public void handle(ActionEvent event) {
-                                circle.vecX = newCircleDialog.getXValue();
-                                circle.vecY = newCircleDialog.getYValue();
-                                circle.mass = newCircleDialog.getMassValue();
+                                circle.setVecX( newCircleDialog.getXValue());
+                                circle.setVecY( newCircleDialog.getYValue());
+                                circle.setMass( newCircleDialog.getMassValue());
                                 myManager.movingObjects.getChildren().add(circle);
                                 myManager.figures.add(circle);
                                 tableData.add(circle);
@@ -179,17 +176,18 @@ public class MainWindow extends Application {
                 }
             }
         });
-
         toolPane.startButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            boolean paused = true;
             @Override
             public void handle(ActionEvent event) {
-                if (!myManager.isGoing()) {
-                    myManager.myRun();
+                if (paused) {
+                    paused = false;
+                    myManager.play();
                     toolPane.startButton.setText("Stop");
                 } else {
-                    myManager.stop();
-                    myManager.getEngine().stop();
-
+                    myManager.pause();
+                    paused = true;
                     toolPane.startButton.setText("Continue");
                 }
             }
