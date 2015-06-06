@@ -101,7 +101,7 @@ public class MainWindow extends Application {
 		});
 
         /*
-        * Adding/modifying circle handler
+		* Adding/modifying circle handler
         * */
 		myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
