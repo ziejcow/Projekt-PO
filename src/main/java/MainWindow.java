@@ -56,7 +56,7 @@ public class MainWindow extends Application {
         ToolPane toolPane = new ToolPane(1024, 40);
         root.getChildren().addAll(toolPane);
 
-        ballsTable = new TablePane<MyCircle>(200, (int)(primaryStage.getHeight()-toolPane.getHeight()) );
+        ballsTable = new TablePane<>(200, (int)(primaryStage.getHeight()-toolPane.getHeight()) );
         root.getChildren().addAll(ballsTable);
         myManager.setTablePane(ballsTable);
 
@@ -93,9 +93,7 @@ public class MainWindow extends Application {
                     int x = (int) event.getSceneX();
                     int y = (int) event.getSceneY();
                     myManager.stop();
-                    for (Thread t : myManager.myThreads) {
-                        t.stop();
-                    }
+                    myManager.getEngine().stop();
                     for (MyCircle i : myManager.figures) {
                         i.translate((x - mouseStartX.get()), (y - mouseStartY.get()));
                     }
@@ -190,9 +188,8 @@ public class MainWindow extends Application {
                     toolPane.startButton.setText("Stop");
                 } else {
                     myManager.stop();
-                    for (Thread t : myManager.myThreads) {
-                        t.stop();
-                    }
+                    myManager.getEngine().stop();
+
                     toolPane.startButton.setText("Continue");
                 }
             }

@@ -22,14 +22,20 @@ public class ExperimentManager {
     public Group movingObjects;
     public Group staticObjects;
     public Vector<MyCircle> figures;
-    public Vector<Thread> myThreads;
+
+    public Thread getEngine() {
+        return engine;
+    }
+
+    private Thread engine;
+    //public Vector<Thread> myThreads;
     boolean going;
     double eps = 1;
     double howFast;
 
     {
         figures = new Vector<>();
-        myThreads = new Vector<>();
+        //myThreads = new Vector<>();
         movingObjects = new Group();
         going = false;
     }
@@ -70,7 +76,7 @@ public class ExperimentManager {
             protected Void call() throws Exception {
                 while (true) {
                     try {
-                        Thread.sleep(1000 / 60);
+                        Thread.sleep(1000 / 30);
                     } catch (Exception e) {
 
                     }
@@ -105,10 +111,9 @@ public class ExperimentManager {
                 }
             }
         };
-        Thread moveCircles = new Thread(task);
-        moveCircles.setDaemon(true);
-        moveCircles.start();
-        myThreads.add((moveCircles));
+        engine = new Thread(task);
+        engine.setDaemon(true);
+        engine.start();
         going = true;
 
     }
