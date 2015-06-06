@@ -6,38 +6,54 @@ import javafx.scene.layout.AnchorPane;
 /**
  * Created by mateusz on 05.06.15.
  */
-public class ToolPane extends AnchorPane{
-    //private AnchorPane toolPane;
-    public final Button startButton;
-    public final Button restartButton;
-    public final ScrollBar timeScroll;
-    ToolPane(int width, int height){
-//        toolPane = new AnchorPane();
+public class ToolPane extends AnchorPane {
+	//private AnchorPane toolPane;
+	public final Button startButton;
+	public final Button newSimulationButton;
+	public final ScrollBar timeScroll;
+	public final Button loadButton;
+	public final Button saveButton;
+	public final Button undoButton;
 
-        this.setPrefSize(width, height);
+	ToolPane(int width, int height) {
+		this.setPrefSize(width, height);
 
-        startButton = new Button("Start");
-        startButton.setPrefSize(100, 40);
-        this.getChildren().addAll(startButton);
+		startButton = new Button("Start");
+		startButton.setPrefSize(100, 40);
+		this.getChildren().addAll(startButton);
 
-        restartButton = new Button("Restart");
-        restartButton.setPrefSize(100, 40);
-        restartButton.setTranslateX(100);
-        this.getChildren().addAll(restartButton);
+		newSimulationButton = new Button("New");
+		newSimulationButton.setPrefSize(100, 40);
+		newSimulationButton.setTranslateX(100);
+		this.getChildren().addAll(newSimulationButton);
 
-        Label timeScrollLabel = new Label("Time: ");
-        timeScrollLabel.setPrefSize(100, 20);
-        timeScrollLabel.setTranslateX(200);
-        this.getChildren().addAll(timeScrollLabel);
+		Label timeScrollLabel = new Label("Time: ");
+		timeScrollLabel.setPrefSize(100, 20);
+		timeScrollLabel.setTranslateX(200);
+		this.getChildren().addAll(timeScrollLabel);
 
-        timeScroll = new ScrollBar();
-        timeScroll.setMax(100);
-        timeScroll.setMin(-100);
-        timeScroll.setValue(0);
-        timeScroll.setPrefSize(200, 20);
-        timeScroll.setTranslateY(20);
-        timeScroll.setTranslateX(200);
-        this.getChildren().addAll(timeScroll);
-    }
+		timeScroll = new ScrollBar();
+		timeScroll.setMax(100);
+		timeScroll.setMin(-100);
+		timeScroll.setValue(0);
+		timeScroll.setPrefSize(200, 20);
+		timeScroll.setTranslateY(20);
+		timeScroll.setTranslateX(200);
+		this.getChildren().addAll(timeScroll);
+
+		loadButton = new Button("Load");
+		loadButton.setPrefSize(100, 40);
+		loadButton.setTranslateX(width - 300);
+
+		saveButton = new Button("Save");
+		saveButton.setPrefSize(100, 40);
+		saveButton.setTranslateX(width - 200);
+
+		undoButton = new Button("Undo");
+		undoButton.setPrefSize(100, 40);
+		undoButton.setTranslateX(width - 100);
+
+		this.getChildren().addAll(saveButton, loadButton, undoButton);
+	}
 
 }
