@@ -33,7 +33,6 @@ public class ExperimentManager {
 
     //private Thread engine;
     //public Vector<Thread> myThreads;
-    boolean going;
     double eps = 1;
     double howFast;
 
@@ -41,13 +40,7 @@ public class ExperimentManager {
         figures = new Vector<>();
         //myThreads = new Vector<>();
         movingObjects = new Group();
-        going = false;
     }
-
-    boolean isGoing() {
-        return going;
-    }
-
 
     private double abs(double a) {
         if (a < 0.0) {
@@ -111,9 +104,7 @@ public class ExperimentManager {
     }
     void pause() {
         timeline.pause();
-        going = false;
     }
     void restart() {
-        going = false;
     }
 }
