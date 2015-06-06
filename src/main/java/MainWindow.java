@@ -5,22 +5,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.scene.Group;
-import java.lang.*;
-import java.lang.Override;import java.lang.String;import java.lang.System;import java.lang.Thread;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Main extends Application {
+public class MainWindow extends Application {
     private final static int circleRadius = 20;
     private static int windowHeight = 1024;
     private static int windowsWidth = 1280;
+    private TablePane<MyCircle> ballsTable;
     AtomicBoolean newCircleWindow = new AtomicBoolean();
     AtomicInteger mouseStartX = new AtomicInteger();
     AtomicInteger mouseStartY = new AtomicInteger();
@@ -30,6 +31,11 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public TablePane<MyCircle> getBallsTable() {
+        return ballsTable;
+    }
+
     //starting point for the application
     //this is where we put the code for the user interface
     @Override
@@ -50,33 +56,13 @@ public class Main extends Application {
         ToolPane toolPane = new ToolPane(1024, 40);
         root.getChildren().addAll(toolPane);
 
-        TableView ballsTable = new TableView();
-        ballsTable.setEditable(true);
-        ballsTable.setTranslateY(40);
-        ballsTable.setPrefSize(200, primaryStage.getHeight()-toolPane.getHeight());
+        ballsTable = new TablePane<MyCircle>(200, (int)(primaryStage.getHeight()-toolPane.getHeight()) );
         root.getChildren().addAll(ballsTable);
-
+        myManager.setTablePane(ballsTable);
 
         ObservableList<MyCircle> tableData = FXCollections.observableArrayList();
         ballsTable.setItems(tableData);
 
-        TableColumn id = new TableColumn("ID");
-        id.setPrefWidth(100);
-        id.setCellValueFactory(new PropertyValueFactory<MyCircle, String>("idString"));
-
-        TableColumn vector = new TableColumn("Vector");
-        vector.setPrefWidth(100);
-
-        TableColumn vecX = new TableColumn("X");
-        //vecX.setCellValueFactory(new PropertyValueFactory<MyCircle, String>("vecX"));
-        vecX.setPrefWidth(50);
-
-        TableColumn vecY = new TableColumn("Y");
-        vecY.setPrefWidth(50);
-
-        vector.getColumns().addAll(vecX, vecY);
-        ballsTable.getColumns().addAll(id, vector);
-        ballsTable.getColumns().add(id);
         Canvas canvas = new Canvas(windowsWidth, windowHeight);
         myManager.movingObjects.getChildren().add(canvas);
 
@@ -183,7 +169,7 @@ public class Main extends Application {
                                 circle.mass = newCircleDialog.getMassValue();
                                 myManager.movingObjects.getChildren().add(circle);
                                 myManager.figures.add(circle);
-                                //tableData.add(circle);
+                                tableData.add(circle);
                                 System.out.println("Circle with ID: " + circle.id + " added.");
                                 //System.out.println(tableData.size());
                                 newCircleDialog.hide();

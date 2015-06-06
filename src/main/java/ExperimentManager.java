@@ -6,7 +6,10 @@ import javafx.scene.shape.Circle;
 import javafx.concurrent.Task;
 import javafx.scene.Group;
 
-import java.lang.Exception;import java.lang.Override;import java.lang.Thread;import java.lang.Void;
+import java.lang.Exception;
+import java.lang.Override;
+import java.lang.Thread;
+import java.lang.Void;
 import java.util.Vector;
 
 /**
@@ -14,6 +17,7 @@ import java.util.Vector;
  */
 public class ExperimentManager {
     //public ScrollBar scroll;
+    private TablePane<MyCircle> tablePane;
     public Double scrollValue = 0.0;
     public Group movingObjects;
     public Group staticObjects;
@@ -57,14 +61,16 @@ public class ExperimentManager {
         }
         return false;
     }
-
+    void setTablePane( TablePane<MyCircle> t){
+        tablePane = t;
+    }
     void myRun() {
         final Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 while (true) {
                     try {
-                        Thread.sleep(1000/60);
+                        Thread.sleep(1000 / 60);
                     } catch (Exception e) {
 
                     }
@@ -95,6 +101,7 @@ public class ExperimentManager {
                         sec /= 100;
                         cir.move(sec);
                     }
+                    //tablePane.refresh();
                 }
             }
         };

@@ -1,5 +1,7 @@
 
 
+import com.sun.javafx.beans.IDProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.shape.Circle;
 
@@ -20,11 +22,12 @@ public class MyCircle extends Circle {
 
     volatile static Integer counter = 0;
     public Integer id;
-    public SimpleStringProperty idString;
+    public SimpleStringProperty idProperty;
+    public SimpleIntegerProperty vecXProperty;
+    public SimpleIntegerProperty vecYProperty;
     {
         synchronized (counter){
             this.id = counter++;
-            idString = new SimpleStringProperty(id.toString());
         }
     }
     public MyCircle(double x, double y, int mass, double radius){
@@ -32,6 +35,9 @@ public class MyCircle extends Circle {
         this.setCenterY(y);
         this.setRadius(radius);
         this.mass = mass;
+        idProperty = new SimpleStringProperty(id.toString());
+        vecXProperty = new SimpleIntegerProperty(0);
+        vecYProperty = new SimpleIntegerProperty(0);
     }
     public void move(double sec) {
         double myX = getCenterX();
@@ -42,6 +48,8 @@ public class MyCircle extends Circle {
         myVecX/=moveback;
         setCenterX(myX + myVecX*sec);
         setCenterY(myY + myVecY * sec);
+        vecXProperty.set(vecX);
+        vecYProperty.set(vecY);
     }
 
     /*
@@ -80,7 +88,13 @@ public class MyCircle extends Circle {
             return false;
         }
     }
-    MyCircle() {
-        super();
+    public String getIdProperty(){
+        return idProperty.get();
+    }
+    public Integer getVecXProperty(){
+        return vecXProperty.get();
+    }
+    public Integer getVecYProperty(){
+        return vecYProperty.get();
     }
 }
