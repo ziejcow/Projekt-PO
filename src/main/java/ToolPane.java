@@ -11,6 +11,9 @@ public class ToolPane extends AnchorPane{
     public final Button startButton;
     public final Button newSimulationButton;
     public final ScrollBar timeScroll;
+    public final Button loadButton;
+    public final Button saveButton;
+    public final Button undoButton;
     ToolPane(int width, int height){
         this.setPrefSize(width, height);
 
@@ -36,6 +39,20 @@ public class ToolPane extends AnchorPane{
         timeScroll.setTranslateY(20);
         timeScroll.setTranslateX(200);
         this.getChildren().addAll(timeScroll);
+
+        loadButton = new Button("Load");
+        loadButton.setPrefSize(100, 40);
+		loadButton.setTranslateX(width-300);
+
+        saveButton = new Button("Save");
+        saveButton.setPrefSize(100, 40);
+		saveButton.setTranslateX(width-200);
+
+        undoButton = new Button("Undo");
+        undoButton.setPrefSize(100, 40);
+		undoButton.setTranslateX(width-100);
+
+		this.getChildren().addAll(saveButton, loadButton, undoButton);
     }
 
 }
