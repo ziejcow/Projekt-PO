@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.shape.Circle;
@@ -11,10 +12,10 @@ public class MyCircle extends Circle {
 	/*
 	* Contains speed in each axis in "unit" per second
 	* */
-	public Integer vecX;
-	public Integer vecY;
+	public Double vecX;
+	public Double vecY;
 
-	public Integer mass;
+	public Double mass;
 	public int radius;
 
 	private volatile static Integer counter = 0;
@@ -25,8 +26,8 @@ public class MyCircle extends Circle {
 
 	private Integer id;
 	private SimpleStringProperty idProperty;
-	private SimpleIntegerProperty vecXProperty;
-	private SimpleIntegerProperty vecYProperty;
+	private SimpleDoubleProperty vecXProperty;
+	private SimpleDoubleProperty vecYProperty;
 
 	{
 		synchronized (counter) {
@@ -34,14 +35,14 @@ public class MyCircle extends Circle {
 		}
 	}
 
-	public MyCircle(double x, double y, int mass, double radius) {
+	public MyCircle(double x, double y, double mass, double radius) {
 		this.setCenterX(x);
 		this.setCenterY(y);
 		this.setRadius(radius);
 		this.mass = mass;
 		idProperty = new SimpleStringProperty(id.toString());
-		vecXProperty = new SimpleIntegerProperty(0);
-		vecYProperty = new SimpleIntegerProperty(0);
+		vecXProperty = new SimpleDoubleProperty(0);
+		vecYProperty = new SimpleDoubleProperty(0);
 	}
 
 	public void move(double sec) {
@@ -99,16 +100,25 @@ public class MyCircle extends Circle {
 			counter = 0;
 		}
 	}
-
+	public void setVecX(int a) {
+		vecX = (double) a;
+	}
+	public void setVecY(int a) {
+		vecY = (double) a;
+	}
+	public void setMass(int a) {
+		mass = (double) a;
+	}
+	
 	public String getIdProperty() {
 		return idProperty.get();
 	}
 
-	public Integer getVecXProperty() {
+	public Double getVecXProperty() {
 		return vecXProperty.get();
 	}
 
-	public Integer getVecYProperty() {
+	public Double getVecYProperty() {
 		return vecYProperty.get();
 	}
 }
