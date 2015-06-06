@@ -107,7 +107,7 @@ public class MainWindow extends Application {
 		myManager.movingObjects.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-                /*
+				/*
                 * Check which mouse button was used for click, PRIMARY is left
                 * */
 				if (event.getButton().toString().equals("PRIMARY") && !newCircleWindow.get()) {
@@ -238,9 +238,9 @@ public class MainWindow extends Application {
 				myManager.pause();
 				myManager.figures.remove(myManager.oprtations.peek());
 				myManager.movingObjects.getChildren().remove(myManager.oprtations.peek());
-				tableData.remove(tableData.size()-1);
+				tableData.remove(tableData.size() - 1);
 				myManager.oprtations.pop();
-				if(restore){
+				if (restore) {
 					myManager.play();
 				}
 			}
@@ -250,15 +250,15 @@ public class MainWindow extends Application {
 			public void handle(ActionEvent actionEvent) {
 				boolean restore = myManager.getIsPlaying();
 				myManager.pause();
-				try{
+				try {
 					OutputStream file = new FileOutputStream("save.simu");
 					OutputStream buffer = new BufferedOutputStream(file);
 					ObjectOutput output = new ObjectOutputStream(buffer);
 					output.writeObject(myManager.figures);
-				} catch (IOException e){
+				} catch (IOException e) {
 					System.out.println(e);
 				}
-				if(restore) {
+				if (restore) {
 					myManager.play();
 				}
 				System.out.println("Saved to file");
