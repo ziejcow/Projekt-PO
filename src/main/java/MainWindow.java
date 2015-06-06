@@ -11,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -242,6 +243,25 @@ public class MainWindow extends Application {
 				if(restore){
 					myManager.play();
 				}
+			}
+		});
+		toolPane.saveButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				boolean restore = myManager.getIsPlaying();
+				myManager.pause();
+				try{
+					OutputStream file = new FileOutputStream("save.simu");
+					OutputStream buffer = new BufferedOutputStream(file);
+					ObjectOutput output = new ObjectOutputStream(buffer);
+					output.writeObject(myManager.figures);
+				} catch (IOException e){
+					System.out.println(e);
+				}
+				if(restore) {
+					myManager.play();
+				}
+				System.out.println("Saved to file");
 			}
 		});
 	}

@@ -2,10 +2,12 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.shape.Circle;
 
+import java.io.Serializable;
+
 /**
  * Created by osm on 09/05/15.
  */
-public class MyCircle extends Circle {
+public class MyCircle extends Circle{
 	final double moveback = 1;
 
 	/*
