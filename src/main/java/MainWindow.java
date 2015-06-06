@@ -124,9 +124,9 @@ public class MainWindow extends Application {
 							modifyCircleDialog.saveChanges.setOnAction(new EventHandler<ActionEvent>() {
 								@Override
 								public void handle(ActionEvent event) {
-									i.vecX = modifyCircleDialog.getXValue();
-									i.vecY = modifyCircleDialog.getYValue();
-									i.mass = modifyCircleDialog.getMassValue();
+									i.setVecX(modifyCircleDialog.getXValue());
+									i.setVecY(modifyCircleDialog.getYValue());
+									i.setMass(modifyCircleDialog.getMassValue());
 									modifyCircleDialog.hide();
 									if (restore) {
 										myManager.play();
@@ -164,12 +164,12 @@ public class MainWindow extends Application {
 						newCircleDialog.addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
 							public void handle(ActionEvent event) {
-								circle.vecX = newCircleDialog.getXValue();
-								circle.vecY = newCircleDialog.getYValue();
-								circle.mass = newCircleDialog.getMassValue();
+								circle.setVecX(newCircleDialog.getXValue());
+								circle.setVecY(newCircleDialog.getYValue());
+								circle.setMass(newCircleDialog.getMassValue());
 								myManager.movingObjects.getChildren().add(circle);
 								myManager.figures.add(circle);
-								myManager.oprtations.add(circle);
+								myManager.operations.add(circle);
 								tableData.add(circle);
 								System.out.println("Circle with ID: " + circle.getCircleId() + " added.");
 								//System.out.println(tableData.size());
@@ -234,12 +234,15 @@ public class MainWindow extends Application {
 		toolPane.undoButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
+				if(myManager.operations.isEmpty()){
+					return;
+				}
 				boolean restore = myManager.getIsPlaying();
 				myManager.pause();
-				myManager.figures.remove(myManager.oprtations.peek());
-				myManager.movingObjects.getChildren().remove(myManager.oprtations.peek());
+				myManager.figures.remove(myManager.operations.peek());
+				myManager.movingObjects.getChildren().remove(myManager.operations.peek());
 				tableData.remove(tableData.size() - 1);
-				myManager.oprtations.pop();
+				myManager.operations.pop();
 				if (restore) {
 					myManager.play();
 				}

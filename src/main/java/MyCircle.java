@@ -16,7 +16,7 @@ public class MyCircle extends Circle {
 	public Double vecY;
 
 	public Double mass;
-	public int radius;
+	private int radius;
 
 	private volatile static Integer counter = 0;
 
@@ -100,16 +100,16 @@ public class MyCircle extends Circle {
 			counter = 0;
 		}
 	}
-	public void setVecX(int a) {
-		vecX = (double) a;
+	public void setVecX(double a) {
+		vecX =  a;
 	}
-	public void setVecY(int a) {
-		vecY = (double) a;
+	public void setVecY(double a) {
+		vecY =  a;
 	}
-	public void setMass(int a) {
-		mass = (double) a;
+	public void setMass(double a) {
+		mass =  a;
 	}
-	
+
 	public String getIdProperty() {
 		return idProperty.get();
 	}
@@ -120,5 +120,9 @@ public class MyCircle extends Circle {
 
 	public Double getVecYProperty() {
 		return vecYProperty.get();
+	}
+
+	public Double getMassProperty(){
+		return mass;
 	}
 }

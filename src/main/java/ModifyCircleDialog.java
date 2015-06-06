@@ -19,17 +19,17 @@ public class ModifyCircleDialog extends Stage {
 		Scene dialogScene = new Scene(gridPane, 250, 120);
 
 		Label xLabel = new Label(" X: ");
-		xTextField = new TextField(circle.vecX.toString());
+		xTextField = new TextField(circle.getVecXProperty().toString());
 		gridPane.add(xLabel, 0, 0);
 		gridPane.add(xTextField, 1, 0);
 
 		Label yLabel = new Label(" Y: ");
-		yTextField = new TextField(circle.vecY.toString());
+		yTextField = new TextField(circle.getVecYProperty().toString());
 		gridPane.add(yLabel, 0, 1);
 		gridPane.add(yTextField, 1, 1);
 
 		Label massLabel = new Label(" Mass: ");
-		massTextField = new TextField(circle.mass.toString());
+		massTextField = new TextField(circle.getMassProperty().toString());
 		gridPane.add(massLabel, 0, 2);
 		gridPane.add(massTextField, 1, 2);
 
@@ -38,15 +38,15 @@ public class ModifyCircleDialog extends Stage {
 		this.setScene(dialogScene);
 	}
 
-	public int getXValue() {
-		return Integer.parseInt(xTextField.getText());
+	public double getXValue() {
+		return Double.parseDouble(xTextField.getText());
 	}
 
-	public int getYValue() {
-		return Integer.parseInt(yTextField.getText());
+	public double getYValue() {
+		return Double.parseDouble(yTextField.getText());
 	}
 
-	public int getMassValue() {
-		return Integer.parseInt(massTextField.getText());
+	public double getMassValue() {
+		return Double.parseDouble(massTextField.getText());
 	}
 }

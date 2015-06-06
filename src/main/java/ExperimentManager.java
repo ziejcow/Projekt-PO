@@ -21,7 +21,7 @@ public class ExperimentManager {
 	private Timeline timeline;
 	private boolean isPlaying;
 
-	public Stack<MyCircle> oprtations;
+	public Stack<MyCircle> operations;
 
 	public Boolean getStopEngine() {
 		return stopEngine;
@@ -44,7 +44,7 @@ public class ExperimentManager {
 		figures = new Vector<>();
 		//myThreads = new Vector<>();
 		movingObjects = new Group();
-		oprtations = new Stack<>();
+		operations = new Stack<>();
 	}
 
 	private double abs(double a) {
@@ -84,8 +84,8 @@ public class ExperimentManager {
 					if (abs(cir1.vecX - cir2.vecX) < eps && abs(cir1.vecY - cir2.vecY) < eps) {
 						continue;
 					}
-					int newX = cir1.vecX + cir2.vecX;
-					int newY = cir1.vecY + cir2.vecY;
+					double newX = cir1.vecX + cir2.vecX;
+					double newY = cir1.vecY + cir2.vecY;
 					cir1.vecX += newX;
 					cir1.vecY += newY;
 					cir2.vecX += newX;
