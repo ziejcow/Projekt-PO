@@ -18,6 +18,10 @@ public class MyCircle extends Circle {
 	public Double mass;
 	public int radius;
 
+
+	private boolean movable;
+
+
 	private volatile static Integer counter = 0;
 
 	public Integer getCircleId() {
@@ -33,6 +37,7 @@ public class MyCircle extends Circle {
 		synchronized (counter) {
 			this.id = counter++;
 		}
+		movable = true;
 	}
 
 	public MyCircle(double x, double y, double mass, double radius) {
@@ -53,11 +58,14 @@ public class MyCircle extends Circle {
 		this.vecY = vecY;
 		this.id = id;
 		idProperty = new SimpleStringProperty(id.toString());
-		vecXProperty = new SimpleDoubleProperty(0);
-		vecYProperty = new SimpleDoubleProperty(0);
+		vecXProperty = new SimpleDoubleProperty(0.0);
+		vecYProperty = new SimpleDoubleProperty(0.0);
 	}
 
 	public void move(double sec) {
+		if(!isMovable()) {
+			return;
+		}
 		double myX = getCenterX();
 		double myY = getCenterY();
 		double myVecY = vecY;
@@ -74,6 +82,18 @@ public class MyCircle extends Circle {
 	* TO DO
 	* */
 	public void changeMovementVector(double x, double y) {
+	}
+
+	/*
+	*/
+	public void setUnmovable() {
+		movable = false;
+		vecY = 0.0;
+		vecX = 0.0;
+	}
+
+	public boolean isMovable() {
+		return movable;
 	}
 
 	/*
@@ -114,9 +134,11 @@ public class MyCircle extends Circle {
 	}
 	public void setVecX(double a) {
 		vecX =  a;
+		vecXProperty.set(vecX);
 	}
 	public void setVecY(double a) {
 		vecY =  a;
+		vecYProperty.set(vecY);
 	}
 	public void setMass(double a) {
 		mass =  a;

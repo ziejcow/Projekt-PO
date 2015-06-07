@@ -118,6 +118,9 @@ public class MainWindow extends Application {
                     * Check if clicked on existing wheel
                     * */
 					for (MyCircle i : myManager.figures) {
+						if (!myManager.addingMovable && !i.isMovable()) {
+							continue;
+						}
 						if (i.inCircle(event.getSceneX(), event.getSceneY())) {
 							System.out.println("Clicked on circle");
 							boolean restore = myManager.getIsPlaying();
@@ -141,17 +144,20 @@ public class MainWindow extends Application {
 					}
 					boolean collision = false;
 					for (MyCircle i : myManager.figures) {
+						if (!myManager.addingMovable && !i.isMovable()) {
+							continue;
+						}
 						if (i.inCollisionProximity(event.getSceneX(), event.getSceneY())) {
 							System.out.println("Too close to create new circle");
 							collision = true;
 						}
 					}
+
 					if (!collision) {
                         /*
                         * Init new Dialong window with gridPane and add all labels, buttons and textFields
                         * */
-						newCircleWindow.set(true);
-						NewCircleDialog newCircleDialog = new NewCircleDialog(primaryStage);
+
 
                         /*
                         * Create new Circle with proper x, y position
@@ -161,28 +167,49 @@ public class MainWindow extends Application {
                         /*
                         * Set action for clicking ADD button
                         * */
+
+
 						boolean restore = myManager.getIsPlaying();
 						myManager.pause();
-						newCircleDialog.addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
-							@Override
-							public void handle(ActionEvent event) {
-								circle.setVecX(newCircleDialog.getXValue());
-								circle.setVecY(newCircleDialog.getYValue());
-								circle.setMass(newCircleDialog.getMassValue());
-								myManager.movingObjects.getChildren().add(circle);
-								myManager.figures.add(circle);
-								myManager.operations.add(circle);
-								tableData.add(circle);
-								System.out.println("Circle with ID: " + circle.getCircleId() + " added.");
-								//System.out.println(tableData.size());
-								newCircleDialog.hide();
-								newCircleWindow.set(false);
-								if (restore) {
-									myManager.play();
+						if (myManager.addingMovable) {
+							newCircleWindow.set(true);
+							NewCircleDialog newCircleDialog = new NewCircleDialog(primaryStage);
+							newCircleDialog.addCircleButton.setOnAction(new EventHandler<ActionEvent>() {
+								@Override
+								public void handle(ActionEvent event) {
+									circle.setVecX(newCircleDialog.getXValue());
+									circle.setVecY(newCircleDialog.getYValue());
+									circle.setMass(newCircleDialog.getMassValue());
+									myManager.movingObjects.getChildren().add(circle);
+									myManager.figures.add(circle);
+									myManager.operations.add(circle);
+									tableData.add(circle);
+									System.out.println("Circle with ID: " + circle.getCircleId() + " added.");
+									//System.out.println(tableData.size());
+									newCircleDialog.hide();
+									newCircleWindow.set(false);
+									if (restore) {
+										myManager.play();
+									}
 								}
+							});
+							newCircleDialog.show();
+						} else {
+							circle.setVecX(0.0);
+							circle.setVecY(0.0);
+							circle.setMass(100);
+							circle.setUnmovable();
+							myManager.movingObjects.getChildren().add(circle);
+							myManager.figures.add(circle);
+							myManager.operations.add(circle);
+							tableData.add(circle);
+							System.out.println("Circle with ID: " + circle.getCircleId() + " added.");
+							//System.out.println(tableData.size());
+
+							if (restore) {
+								myManager.play();
 							}
-						});
-						newCircleDialog.show();
+						}
 					}
 				}
 			}
@@ -233,10 +260,27 @@ public class MainWindow extends Application {
 				tableData.clear();
 			}
 		});
+		/*
+		Button to add both static and nonstatic cirles
+
+		 */
+		toolPane.movablilityOfCircleButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				myManager.addingMovable = !myManager.addingMovable;
+				if(toolPane.movablilityOfCircleButton.getText().equals("Unmovable Circles")) {
+					toolPane.movablilityOfCircleButton.setText("Movable Circles");
+				}
+				else {
+					toolPane.movablilityOfCircleButton.setText("Unmovable Circles");
+				}
+			}
+		});
+
 		toolPane.undoButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				if(myManager.operations.isEmpty()){
+				if (myManager.operations.isEmpty()) {
 					return;
 				}
 				boolean restore = myManager.getIsPlaying();
@@ -250,13 +294,15 @@ public class MainWindow extends Application {
 				}
 			}
 		});
+
+
 		toolPane.saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent actionEvent) {
 				boolean restore = myManager.getIsPlaying();
 				myManager.pause();
 				ArrayList<SerializableCircle> toSave = new ArrayList<>();
-				for(MyCircle i : myManager.figures){
+				for (MyCircle i : myManager.figures) {
 					toSave.add(new SerializableCircle(i));
 				}
 				try {
@@ -285,12 +331,12 @@ public class MainWindow extends Application {
 				myManager.operations.clear();
 				tableData.clear();
 				ArrayList<SerializableCircle> loaded = null;
-				try{
+				try {
 					InputStream file = new FileInputStream("save.simu");
 					InputStream buffer = new BufferedInputStream(file);
 					ObjectInput input = new ObjectInputStream(buffer);
 					loaded = (ArrayList<SerializableCircle>) input.readObject();
-					for(SerializableCircle i : loaded){
+					for (SerializableCircle i : loaded) {
 						MyCircle temp = i.getMyCircle();
 						temp.setVisible(true);
 						temp.setRadius(20);
@@ -309,7 +355,7 @@ public class MainWindow extends Application {
 					file.close();
 					myManager.myRun();
 
-				} catch (Exception e){
+				} catch (Exception e) {
 					System.out.println("Exception while loading from file");
 				}
 				System.out.println("Loaded from file");

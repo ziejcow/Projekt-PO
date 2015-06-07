@@ -13,6 +13,7 @@ import java.util.Vector;
  * Created by osm on 03/05/15.
  */
 public class ExperimentManager {
+	public boolean addingMovable;
 	private TablePane<MyCircle> tablePane;
 	public Double scrollValue = 0.0;
 	public Group movingObjects;
@@ -29,6 +30,7 @@ public class ExperimentManager {
 		figures = new Vector<>();
 		movingObjects = new Group();
 		operations = new Stack<>();
+		addingMovable = true;
 	}
 
 	private double abs(double a) {

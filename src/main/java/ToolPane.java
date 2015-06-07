@@ -14,6 +14,7 @@ public class ToolPane extends AnchorPane {
 	public final Button loadButton;
 	public final Button saveButton;
 	public final Button undoButton;
+	public final Button movablilityOfCircleButton;
 
 	ToolPane(int width, int height) {
 		this.setPrefSize(width, height);
@@ -41,6 +42,10 @@ public class ToolPane extends AnchorPane {
 		timeScroll.setTranslateX(200);
 		this.getChildren().addAll(timeScroll);
 
+		movablilityOfCircleButton = new Button("Unmovable Circles");
+		movablilityOfCircleButton.setPrefSize(200, 40);
+		movablilityOfCircleButton.setTranslateX(width - 400);
+
 		loadButton = new Button("Load");
 		loadButton.setPrefSize(100, 40);
 		loadButton.setTranslateX(width - 300);
@@ -53,7 +58,9 @@ public class ToolPane extends AnchorPane {
 		undoButton.setPrefSize(100, 40);
 		undoButton.setTranslateX(width - 100);
 
-		this.getChildren().addAll(saveButton, loadButton, undoButton);
+
+
+		this.getChildren().addAll(saveButton, loadButton, undoButton, movablilityOfCircleButton);
 	}
 
 }
