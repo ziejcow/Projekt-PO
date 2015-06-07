@@ -44,7 +44,7 @@ public class ToolPane extends AnchorPane {
 
 		movablilityOfCircleButton = new Button("Unmovable Circles");
 		movablilityOfCircleButton.setPrefSize(200, 40);
-		movablilityOfCircleButton.setTranslateX(width - 400);
+		movablilityOfCircleButton.setTranslateX(width - 500);
 
 		loadButton = new Button("Load");
 		loadButton.setPrefSize(100, 40);
