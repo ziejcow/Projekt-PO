@@ -12,8 +12,10 @@ public class SerializableCircle implements Serializable{
 	public int id;
 	double centerX;
 	double centerY;
+	boolean movable;
 
 	SerializableCircle(MyCircle circle){
+		movable = circle.isMovable();
 		vecX = circle.vecX;
 		vecY = circle.vecY;
 		mass = circle.mass;
@@ -24,6 +26,11 @@ public class SerializableCircle implements Serializable{
 	}
 
 	MyCircle getMyCircle(){
-		return new MyCircle(centerX, centerY, mass, radius, vecX, vecY, id);
+
+		MyCircle res =  new MyCircle(centerX, centerY, mass, radius, vecX, vecY, id);
+		if(!movable) {
+			res.setUnmovable();
+		}
+		return res;
 	}
 }
