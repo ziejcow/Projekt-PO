@@ -16,7 +16,7 @@ public class MyCircle extends Circle {
 	public Double vecY;
 
 	public Double mass;
-	private int radius;
+	public int radius;
 
 	private volatile static Integer counter = 0;
 
@@ -40,6 +40,18 @@ public class MyCircle extends Circle {
 		this.setCenterY(y);
 		this.setRadius(radius);
 		this.mass = mass;
+		idProperty = new SimpleStringProperty(id.toString());
+		vecXProperty = new SimpleDoubleProperty(0);
+		vecYProperty = new SimpleDoubleProperty(0);
+	}
+	public MyCircle(double x, double y, double mass, double radius, double vecX, double vecY, Integer id) {
+		this.setCenterX(x);
+		this.setCenterY(y);
+		this.setRadius(radius);
+		this.mass = mass;
+		this.vecX = vecX;
+		this.vecY = vecY;
+		this.id = id;
 		idProperty = new SimpleStringProperty(id.toString());
 		vecXProperty = new SimpleDoubleProperty(0);
 		vecYProperty = new SimpleDoubleProperty(0);

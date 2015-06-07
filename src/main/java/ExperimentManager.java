@@ -17,32 +17,16 @@ public class ExperimentManager {
 	public Double scrollValue = 0.0;
 	public Group movingObjects;
 	public Vector<MyCircle> figures;
-	private Boolean stopEngine = false;
 	private Timeline timeline;
 	private boolean isPlaying;
 
 	public Stack<MyCircle> operations;
 
-	public Boolean getStopEngine() {
-		return stopEngine;
-	}
-
-	public void setStopEngine(Boolean stopEngine) {
-		this.stopEngine = stopEngine;
-	}
-
-//    public Thread getEngine() {
-//        return engine;
-//    }
-
-	//private Thread engine;
-	//public Vector<Thread> myThreads;
 	double eps = 1;
 	double howFast;
 
 	{
 		figures = new Vector<>();
-		//myThreads = new Vector<>();
 		movingObjects = new Group();
 		operations = new Stack<>();
 	}
@@ -103,8 +87,6 @@ public class ExperimentManager {
 			tablePane.refresh();
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
-		//timeline.play();
-
 	}
 
 	void play() {

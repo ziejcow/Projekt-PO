@@ -9,9 +9,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -253,11 +255,18 @@ public class MainWindow extends Application {
 			public void handle(ActionEvent actionEvent) {
 				boolean restore = myManager.getIsPlaying();
 				myManager.pause();
+				ArrayList<SerializableCircle> toSave = new ArrayList<>();
+				for(MyCircle i : myManager.figures){
+					toSave.add(new SerializableCircle(i));
+				}
 				try {
 					OutputStream file = new FileOutputStream("save.simu");
 					OutputStream buffer = new BufferedOutputStream(file);
 					ObjectOutput output = new ObjectOutputStream(buffer);
-					output.writeObject(myManager.figures);
+					output.writeObject(toSave);
+					output.close();
+					buffer.close();
+					file.close();
 				} catch (IOException e) {
 					System.out.println(e);
 				}
@@ -265,6 +274,45 @@ public class MainWindow extends Application {
 					myManager.play();
 				}
 				System.out.println("Saved to file");
+			}
+		});
+		toolPane.loadButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				myManager.pause();
+				myManager.movingObjects.getChildren().removeAll(myManager.figures);
+				myManager.figures.clear();
+				myManager.operations.clear();
+				tableData.clear();
+				ArrayList<SerializableCircle> loaded = null;
+				try{
+					InputStream file = new FileInputStream("save.simu");
+					InputStream buffer = new BufferedInputStream(file);
+					ObjectInput input = new ObjectInputStream(buffer);
+					loaded = (ArrayList<SerializableCircle>) input.readObject();
+					for(SerializableCircle i : loaded){
+						MyCircle temp = i.getMyCircle();
+						temp.setVisible(true);
+						temp.setRadius(20);
+						temp.setFill(Color.BLACK);
+
+						//System.out.print(i.id + " " );
+
+						tableData.add(temp);
+						myManager.movingObjects.getChildren().add(temp);
+						myManager.figures.add(temp);
+						myManager.operations.add(temp);
+					}
+					System.out.println();
+					input.close();
+					buffer.close();
+					file.close();
+					myManager.myRun();
+
+				} catch (Exception e){
+					System.out.println("Exception while loading from file");
+				}
+				System.out.println("Loaded from file");
 			}
 		});
 	}
