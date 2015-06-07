@@ -287,7 +287,7 @@ public class MainWindow extends Application {
 				myManager.pause();
 				myManager.figures.remove(myManager.operations.peek());
 				myManager.movingObjects.getChildren().remove(myManager.operations.peek());
-				tableData.remove(tableData.size() - 1);
+				if(myManager.operations.peek().isMovable()) tableData.remove(tableData.size() - 1);
 				myManager.operations.pop();
 				if (restore) {
 					myManager.play();
@@ -344,7 +344,7 @@ public class MainWindow extends Application {
 
 						//System.out.print(i.id + " " );
 
-						tableData.add(temp);
+						if(i.movable) tableData.add(temp);
 						myManager.movingObjects.getChildren().add(temp);
 						myManager.figures.add(temp);
 						myManager.operations.add(temp);
