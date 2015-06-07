@@ -4,15 +4,15 @@ import java.io.Serializable;
  * Created by mateusz on 07.06.15.
  */
 public class SerializableCircle implements Serializable{
-	public Double vecX;
-	public Double vecY;
+	private Double vecX;
+	private Double vecY;
 
-	public Double mass;
-	public int radius;
-	public int id;
-	double centerX;
-	double centerY;
-	boolean movable;
+	private Double mass;
+	private int radius;
+	private int id;
+	private double centerX;
+	private double centerY;
+	private boolean movable;
 
 	SerializableCircle(MyCircle circle){
 		movable = circle.isMovable();
