@@ -87,6 +87,9 @@ public class MyCircle extends Circle {
 	/*
 	*/
 	public void setUnmovable() {
+		synchronized (counter){
+			counter--;
+		}
 		movable = false;
 		vecY = 0.0;
 		vecX = 0.0;

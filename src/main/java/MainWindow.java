@@ -202,7 +202,7 @@ public class MainWindow extends Application {
 							myManager.movingObjects.getChildren().add(circle);
 							myManager.figures.add(circle);
 							myManager.operations.add(circle);
-							tableData.add(circle);
+							//tableData.add(circle);
 							System.out.println("Circle with ID: " + circle.getCircleId() + " added.");
 							//System.out.println(tableData.size());
 
