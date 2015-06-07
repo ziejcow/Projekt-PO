@@ -13,6 +13,7 @@ import java.util.Vector;
  * Created by osm on 03/05/15.
  */
 public class ExperimentManager {
+	public boolean addingMovable;
 	private TablePane<MyCircle> tablePane;
 	public Double scrollValue = 0.0;
 	public Group movingObjects;
@@ -29,6 +30,7 @@ public class ExperimentManager {
 		figures = new Vector<>();
 		movingObjects = new Group();
 		operations = new Stack<>();
+		addingMovable = true;
 	}
 
 	private double abs(double a) {
@@ -62,18 +64,7 @@ public class ExperimentManager {
 
 					MyCircle cir1 = figures.get(i);
 					MyCircle cir2 = figures.get(j);
-					if (!tangent(cir1, cir2)) {
-						continue;
-					}
-					if (abs(cir1.vecX - cir2.vecX) < eps && abs(cir1.vecY - cir2.vecY) < eps) {
-						continue;
-					}
-					double newX = cir1.vecX + cir2.vecX;
-					double newY = cir1.vecY + cir2.vecY;
-					cir1.vecX += newX;
-					cir1.vecY += newY;
-					cir2.vecX += newX;
-					cir2.vecY += newY;
+					CircleCollider.collideCircle(cir1, cir2);
 				}
 			}
 			//System.out.println(figures.size());
