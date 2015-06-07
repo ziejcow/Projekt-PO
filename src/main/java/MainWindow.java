@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -306,7 +307,14 @@ public class MainWindow extends Application {
 					toSave.add(new SerializableCircle(i));
 				}
 				try {
-					OutputStream file = new FileOutputStream("save.simu");
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Select file to save");
+					File selectedFile = fileChooser.showSaveDialog(primaryStage);
+					if(selectedFile == null){
+						System.out.println("Select file to save");
+						return;
+					}
+					OutputStream file = new FileOutputStream(selectedFile);
 					OutputStream buffer = new BufferedOutputStream(file);
 					ObjectOutput output = new ObjectOutputStream(buffer);
 					output.writeObject(toSave);
@@ -332,7 +340,14 @@ public class MainWindow extends Application {
 				tableData.clear();
 				ArrayList<SerializableCircle> loaded = null;
 				try {
-					InputStream file = new FileInputStream("save.simu");
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Select file to load");
+					File selectedFile = fileChooser.showOpenDialog(primaryStage);
+					if(selectedFile == null){
+						System.out.println("Select file to load");
+						return;
+					}
+					InputStream file = new FileInputStream(selectedFile);
 					InputStream buffer = new BufferedInputStream(file);
 					ObjectInput input = new ObjectInputStream(buffer);
 					loaded = (ArrayList<SerializableCircle>) input.readObject();
