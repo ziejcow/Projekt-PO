@@ -344,7 +344,7 @@ public class MainWindow extends Application {
 
 						//System.out.print(i.id + " " );
 
-						if(i.movable) tableData.add(temp);
+						if(temp.isMovable()) tableData.add(temp);
 						myManager.movingObjects.getChildren().add(temp);
 						myManager.figures.add(temp);
 						myManager.operations.add(temp);
