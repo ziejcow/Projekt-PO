@@ -30,7 +30,7 @@ public class CircleCollider {
 
     private static boolean tangent(Circle cir1, Circle cir2) {
         double mylen = length(cir1, cir2);
-        if (abs(mylen - cir1.getRadius() - cir2.getRadius()) < eps) {
+        if (mylen - cir1.getRadius() - cir2.getRadius() < 2 * eps) {
             return true;
         }
         return false;
@@ -40,10 +40,15 @@ public class CircleCollider {
         if (!tangent(cir1, cir2)) {
             return;
         }
-        double cs = ((double) cir2.getCenterX() - (double) cir1.getCenterX())/((double) (cir1.getRadius() + cir2.getRadius())) ;
-        double ss = ((double) cir2.getCenterY() - (double) cir1.getCenterY())/((double) (cir1.getRadius() + cir2.getRadius())) ;
+        double cs = ((double) cir2.getCenterX() - (double) cir1.getCenterX())/(length(cir1, cir2));
+        double ss = ((double) cir2.getCenterY() - (double) cir1.getCenterY())/(length(cir1,cir2)) ;
         System.out.println(ss +  " " + cs);
         System.out.println(cir1.vecX + " " + cir1.vecY + " " + cir2.vecX + " " +  cir2.vecY);
+
+        double tempx1 = cs * cir1.getCenterX() - ss * cir1.getCenterY();
+
+        double tempx2 = cs * cir1.getCenterX() - ss * cir1.getCenterY();
+
 
         double x1 = cir1.vecX * cs - cir1.vecY * ss;
         double y1 = cir1.vecX * ss + cir1.vecY * cs;
@@ -51,15 +56,23 @@ public class CircleCollider {
         double x2 = cir2.vecX * cs - cir2.vecY * ss;
         double y2 = cir2.vecX * ss + cir2.vecY * cs;
 
+        if( abs(x1) > abs(x2) ) {
+            if(x1 * (tempx2-tempx1) > 0 ) {
+                return;
+            }
+        }
+        else {
+            if(x2 * (tempx1-tempx2) > 0 ) {
+                return;
+            }
+        }
+
         System.out.println(x1 + " " + y1  + " " + x2 + " " + y2);
-        double temp = (cir1.mass * x1 + cir2.mass * x2)/( (cir1.mass + cir2.mass));
-        if(x1 < 0.0 && x2 < 0.0) {
-            return;
-        }
-        if(x1 > 0.0 && x2 > 0.0) {
-            return;
-        }
-        x2 = temp;
+
+
+
+        double temp = x2;
+        x2 = x1;
         x1 = temp;
         System.out.println(temp);
 
