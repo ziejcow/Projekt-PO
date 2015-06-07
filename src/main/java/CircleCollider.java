@@ -45,8 +45,8 @@ public class CircleCollider {
         }
         double cs = ((double) cir2.getCenterX() - (double) cir1.getCenterX())/(length(cir1, cir2));
         double ss = ((double) cir2.getCenterY() - (double) cir1.getCenterY())/(length(cir1,cir2)) ;
-        System.out.println(ss +  " " + cs);
-        System.out.println(cir1.vecX + " " + cir1.vecY + " " + cir2.vecX + " " +  cir2.vecY);
+//        System.out.println(ss +  " " + cs);
+//        System.out.println(cir1.vecX + " " + cir1.vecY + " " + cir2.vecX + " " +  cir2.vecY);
 
         double tempx1 = cs * cir1.getCenterX() - ss * cir1.getCenterY();
 
@@ -87,7 +87,7 @@ public class CircleCollider {
         }
 
 
-        System.out.println(x1 + " " + y1  + " " + x2 + " " + y2);
+//        System.out.println(x1 + " " + y1  + " " + x2 + " " + y2);
 
 
 
@@ -98,6 +98,6 @@ public class CircleCollider {
 
         cir2.setVecX(x2 * cs + y2 * ss);
         cir2.setVecY(-x2 * ss + y2 * cs);
-        System.out.println(cir1.vecX + " " + cir1.vecY + " " + cir2.vecX + " " +  cir2.vecY);
+//        System.out.println(cir1.vecX + " " + cir1.vecY + " " + cir2.vecX + " " +  cir2.vecY);
     }
 }
