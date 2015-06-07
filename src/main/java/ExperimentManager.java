@@ -62,18 +62,7 @@ public class ExperimentManager {
 
 					MyCircle cir1 = figures.get(i);
 					MyCircle cir2 = figures.get(j);
-					if (!tangent(cir1, cir2)) {
-						continue;
-					}
-					if (abs(cir1.vecX - cir2.vecX) < eps && abs(cir1.vecY - cir2.vecY) < eps) {
-						continue;
-					}
-					double newX = cir1.vecX + cir2.vecX;
-					double newY = cir1.vecY + cir2.vecY;
-					cir1.vecX += newX;
-					cir1.vecY += newY;
-					cir2.vecX += newX;
-					cir2.vecY += newY;
+					CircleCollider.collideCircle(cir1, cir2);
 				}
 			}
 			//System.out.println(figures.size());
