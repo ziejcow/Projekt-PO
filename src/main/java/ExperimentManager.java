@@ -23,7 +23,7 @@ public class ExperimentManager {
 
 	public Stack<MyCircle> operations;
 
-	double eps = 5;
+	double eps = 3;
 	double howFast;
 
 	{
@@ -58,7 +58,7 @@ public class ExperimentManager {
 	}
 
 	void myRun() {
-		timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(1000 / 180), event -> {
+		timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(1000 / 60), event -> {
 			for (int i = 0; i < figures.size(); i++) {
 				if(!figures.get(i).isMovable()) {
 					continue;
