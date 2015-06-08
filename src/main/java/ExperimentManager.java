@@ -23,7 +23,7 @@ public class ExperimentManager {
 
 	public Stack<MyCircle> operations;
 
-	double eps = 1;
+	double eps = 5;
 	double howFast;
 
 	{
@@ -58,12 +58,20 @@ public class ExperimentManager {
 	}
 
 	void myRun() {
-		timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(1000 / 30), event -> {
+		timeline = new Timeline(new KeyFrame(javafx.util.Duration.millis(1000 / 180), event -> {
 			for (int i = 0; i < figures.size(); i++) {
-				for (int j = i + 1; j < figures.size(); j++) {
+				if(!figures.get(i).isMovable()) {
+					continue;
+				}
+				for (int j = 0; j < figures.size(); j++) {
 
 					MyCircle cir1 = figures.get(i);
 					MyCircle cir2 = figures.get(j);
+					if(cir2.isMovable()) {
+						if(i <= j) {
+							continue;
+						}
+					}
 					CircleCollider.collideCircle(cir1, cir2);
 				}
 			}
